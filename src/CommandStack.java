@@ -1,4 +1,5 @@
-import java.util.Stack;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Manages a stack of {@link Command} objects to provide undo and redo functionality.
@@ -17,7 +18,9 @@ public class CommandStack
     private static final int EMPTY = 0;
     public static final int INDEX_OFFSET = -1;
 
-    private final Stack<Command> stack;
+    //This would be slightly better as an actual java.util.Stack,
+    //but we haven't  learned about that yet.
+    private final List<Command> stack;
     private int current;
 
     /**
@@ -25,7 +28,7 @@ public class CommandStack
      */
     public CommandStack()
     {
-        stack = new Stack<>();
+        stack = new ArrayList<>();
         current = EMPTY;
     }
 
@@ -39,10 +42,10 @@ public class CommandStack
     {
         while(stack.size() > current)
         {
-            stack.pop();
+            stack.remove(stack.size() + INDEX_OFFSET);
         }
         command.execute();
-        stack.push(command);
+        stack.add(command);
         current++;
     }
 

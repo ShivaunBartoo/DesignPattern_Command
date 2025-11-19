@@ -8,8 +8,9 @@ import java.util.Scanner;
  */
 public class Main
 {
-    private static final CommandStack stack     = new CommandStack();
-    private static final StringBuilder document = new StringBuilder();
+    private static final CommandStack STACK = new CommandStack();
+    private static final StringBuilder DOCUMENT = new StringBuilder();
+    private static final int EMPTY = 0;
 
     /**
      * Entry point for the application.
@@ -37,12 +38,12 @@ public class Main
             switch(input.strip().toLowerCase())
             {
                 case "quit" -> running = false;
-                case "undo" -> stack.undo();
-                case "redo" -> stack.redo();
-                default -> stack.run(getDocumentCommand(input));
+                case "undo" -> STACK.undo();
+                case "redo" -> STACK.redo();
+                default -> STACK.run(getDocumentCommand(input));
             }
 
-            System.out.println(document);
+            System.out.println(DOCUMENT);
         }
     }
 
@@ -58,14 +59,14 @@ public class Main
         final Runnable execute;
         final Runnable undo;
 
-        execute = () -> document.append(str);
+        execute = () -> DOCUMENT.append(str);
         undo    = () ->
         {
             final int start;
-            start = document.length() - str.length();
-            if (start >= 0)
+            start = DOCUMENT.length() - str.length();
+            if (start >= EMPTY)
             {
-                document.delete(start, document.length());
+                DOCUMENT.delete(start, DOCUMENT.length());
             }
         };
         return new Command(execute, undo);
