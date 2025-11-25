@@ -4,14 +4,10 @@ import java.util.Scanner;
  * Demonstrates the use of the Command pattern with a simple text editor.
  *
  * @author Shivaun Bartoo
- * @version 1.0
+ * @version 2.0
  */
 public class Main
 {
-    private static final CommandStack STACK = new CommandStack();
-    private static final StringBuilder DOCUMENT = new StringBuilder();
-    private static final int EMPTY = 0;
-
     /**
      * Entry point for the application.
      * <p>
@@ -24,13 +20,17 @@ public class Main
     public static void main(final String[] args)
     {
         final Scanner scan;
+        final StringBuilder document;
+        final CommandStack stack;
         boolean running;
         String input;
 
+        document = new StringBuilder();
+        stack = new CommandStack();
         scan = new Scanner(System.in);
         running = true;
 
-        System.out.println("Enter an input, \"undo\" to undo, or \"quit\" to quit.");
+        System.out.println("Enter a text input or a command: \"undo\", \"redo\", or \"quit\".");
         while(running)
         {
             input = scan.nextLine();
@@ -38,37 +38,12 @@ public class Main
             switch(input.strip().toLowerCase())
             {
                 case "quit" -> running = false;
-                case "undo" -> STACK.undo();
-                case "redo" -> STACK.redo();
-                default -> STACK.run(getDocumentCommand(input));
+                case "undo" -> stack.undo();
+                case "redo" -> stack.redo();
+                default -> stack.run(new TextCommand(document, input));
             }
 
-            System.out.println(DOCUMENT);
+            System.out.println(document);
         }
-    }
-
-    /**
-     * Creates a {@link Command} that appends the given string to the document,
-     * and can undo the operation by removing the appended text.
-     *
-     * @param str the string to append to the document
-     * @return a {@code Command} for appending and undoing the append
-     */
-    private static Command getDocumentCommand(final String str)
-    {
-        final Runnable execute;
-        final Runnable undo;
-
-        execute = () -> DOCUMENT.append(str);
-        undo    = () ->
-        {
-            final int start;
-            start = DOCUMENT.length() - str.length();
-            if (start >= EMPTY)
-            {
-                DOCUMENT.delete(start, DOCUMENT.length());
-            }
-        };
-        return new Command(execute, undo);
     }
 }

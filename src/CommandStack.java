@@ -56,7 +56,7 @@ public class CommandStack
     {
         if(current > EMPTY)
         {
-            stack.get(current + INDEX_OFFSET).undo();
+            stack.get(current + INDEX_OFFSET).undoCommand();
             current--;
         }
         else
