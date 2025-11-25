@@ -1,5 +1,5 @@
 /**
- * This class is a lightweight implementation of the Command pattern.
+ * This interface is a simple implementation of the Command pattern.
  * Represents an executable operation paired with an undo operation.
  *
  * @author Shivaun Bartoo
